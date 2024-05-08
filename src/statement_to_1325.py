@@ -10,7 +10,7 @@ def statement_to_1325_form(df_statement, rate_csv_path):
 
     df_statement = df_statement[df_statement['DataDiscriminator'].isin(['Trade', 'ClosedLot'])].reset_index(drop=True)
 
-    df_statement["Date"] = pd.to_datetime(df_statement["Date/Time"]).dt.date
+    df_statement["Date"] = pd.to_datetime(df_statement["Date/Time"],format='mixed').dt.date
     df_statement['Quantity'] = df_statement['Quantity'].astype(float)
 
     result = []
