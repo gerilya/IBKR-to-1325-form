@@ -16,7 +16,11 @@ def parse_statement(csv_path: str) -> Dict[str, pd.DataFrame]:
         else:
             key = schema_name
 
-        dataframes_by_schema_name[key] = df
+        if key in dataframes_by_schema_name.keys():
+            # Add support for multiple 'Trades' section (for ex., Stocks and Options)
+            dataframes_by_schema_name[key] = pd.concat([dataframes_by_schema_name[key],df],axis=0,ignore_index=True)
+        else:
+            dataframes_by_schema_name[key] = df
 
     dataframes_by_schema_name: Dict[str, pd.DataFrame] = {}
     current_schema_col_names: List[str] = None
@@ -37,7 +41,7 @@ def parse_statement(csv_path: str) -> Dict[str, pd.DataFrame]:
                 current_csv_section_data = [current_row]
             elif header == 'Data':
                 current_csv_section_data.append(current_row)
-            elif header in ['Total', 'SubTotal']:
+            elif header in ['Total', 'SubTotal','Notes']:
                 pass
             else:
                 raise f'Unexpected header {header}'
