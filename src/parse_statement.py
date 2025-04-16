@@ -7,6 +7,7 @@ def parse_statement(csv_path: str) -> Dict[str, pd.DataFrame]:
         df = pd.DataFrame(current_csv_section_data[1:], columns=current_schema_col_names)
         df = df.stack().str.replace(',','').unstack()
         df = df.apply(pd.to_numeric, errors='ignore') # Cast to number (float) when possible
+        df = df.replace({'DataDiscriminator':'ClosedLot*'},'ClosedLot')
         schema_name = current_schema_col_names[0]
 
         # The Commissions schema have multiple header lines for different assets categories
